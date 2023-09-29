@@ -1,12 +1,12 @@
 from typing import Annotated
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pydantic import EmailStr
 
-from src.models import  User
-from .schemas import NewUserCreateSchema, GetUserSchema, PutUpdateUserSchema, PatchUpdateUserSchema
+from src.models import User
+from .schemas import PutUpdateUserSchema, PatchUpdateUserSchema
 from src.api_v1.users.registration.schemas import UserRegistration
 
 from src.api_v1.auth.hash_password import get_password_hash
@@ -20,8 +20,20 @@ async def create_new_user(new_user: UserRegistration, session: AsyncSession) -> 
     return user
 
 
-async def get_current_user_by_id(user_pid: int, session: AsyncSession) -> User | None:
+async def get_current_user_by_pid(user_pid: int, session: AsyncSession) -> User | None:
     return await session.get(User, user_pid)
+
+
+async def _get_user_by_any_parameter(
+        parameter: str,
+        value: str,
+        session: AsyncSession,
+) -> User:
+    condition = f"{parameter}='{value}'"
+    stmt = select(User).where(text(condition))
+    result = await session.execute(stmt)
+    user: User | None = result.scalar_one_or_none()
+    return user
 
 
 async def get_current_user_by_email(

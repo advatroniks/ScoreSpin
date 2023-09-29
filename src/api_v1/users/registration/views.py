@@ -8,9 +8,7 @@ from src.models import db_helper
 from src.api_v1.users import crud
 from src.api_v1.users.schemas import GetUserSchema
 
-router = APIRouter(
-    tags=["Registration"]
-)
+router = APIRouter()
 
 
 @router.post(path="/", response_model=GetUserSchema)

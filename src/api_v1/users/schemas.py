@@ -1,12 +1,12 @@
+from datetime import date
+
 from pydantic import BaseModel, ConfigDict, UUID4, EmailStr
-from typing import Annotated
-from annotated_types import Ge, Gt, Le, Lt
 
 
 class UserSchemaBase(BaseModel):
     first_name: str
     surname: str
-    age: int
+    date_of_birth: date
     city: str
 
 
