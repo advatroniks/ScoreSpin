@@ -1,10 +1,11 @@
 from enum import Enum
-from typing import Annotated
-from sqlalchemy import CheckConstraint
+from datetime import date
+from typing import Literal
 
-from sqlalchemy.orm import Mapped, mapped_column
-from src.models import Base
 from sqlalchemy import Boolean, String, text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from src.models import Base
 
 
 class UserRole(Enum):
@@ -16,7 +17,7 @@ class UserRole(Enum):
 class User(Base):
     first_name: Mapped[str]
     surname: Mapped[str]
-    age: Mapped[int]
+    date_of_birth: Mapped[date]
     city: Mapped[str]
     is_active: Mapped[bool] = mapped_column(
         Boolean,
@@ -35,12 +36,8 @@ class User(Base):
         String(length=30),
         unique=True
     )
-    user_role: Mapped[str] = mapped_column(
+    user_role: Mapped[Literal["admin", "moderator", "user"]] = mapped_column(
         default="user",
         server_default=text("user"),
         nullable=False,
     )
-
-
-
-

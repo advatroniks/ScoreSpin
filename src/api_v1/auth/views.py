@@ -32,6 +32,11 @@ async def login_for_access_token(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Your account has been deleted/"
+        )
     access_token_expires = timedelta(minutes=30)
 
     access_token = create_access_token(

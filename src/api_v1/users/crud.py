@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from sqlalchemy import select, text
+from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pydantic import EmailStr
@@ -58,3 +58,10 @@ async def update_user(
     await session.commit()
     return current_user
 
+
+async def delete_user(
+        session: AsyncSession,
+        user_for_delete: User,
+):
+    user_for_delete.is_active = False
+    await session.commit()
