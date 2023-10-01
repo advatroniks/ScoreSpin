@@ -1,11 +1,14 @@
 from enum import Enum
 from datetime import date
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 
 from sqlalchemy import Boolean, String, text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models import Base
+
+if TYPE_CHECKING:
+    from .db_model_profile import Profile
 
 
 class UserRole(Enum):
@@ -17,8 +20,6 @@ class UserRole(Enum):
 class User(Base):
     first_name: Mapped[str]
     surname: Mapped[str]
-    date_of_birth: Mapped[date]
-    city: Mapped[str]
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
@@ -41,3 +42,5 @@ class User(Base):
         server_default=text("user"),
         nullable=False,
     )
+
+    profile: Mapped["Profile"] = relationship(back_populates="user")

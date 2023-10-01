@@ -6,8 +6,6 @@ from pydantic import BaseModel, ConfigDict, UUID4, EmailStr
 class UserSchemaBase(BaseModel):
     first_name: str
     surname: str
-    date_of_birth: date
-    city: str
 
 
 class NewUserCreateSchema(UserSchemaBase):
