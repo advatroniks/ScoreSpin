@@ -1,12 +1,14 @@
-class A:
-    a: int = 4
-    b: int = 10
-
-    @property
-    def c(self):
-        return 10
+from pydantic import BaseModel, ValidationError, field_validator
+from pydantic_core.core_schema import FieldValidationInfo
 
 
-a = A()
+class UserModel(BaseModel):
+    password1: str
+    password2: str
 
-print(dir(A))
+    @field_validator("password2")
+    def passwords_match(cls, v: str, info: FieldValidationInfo) -> str:
+        print(info.data)
+
+UserModel(password1="abc", password2="abc")
+

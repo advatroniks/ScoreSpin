@@ -5,6 +5,8 @@ from . import crud
 from .schemas import Game, GameCreate, GameUpdate, GameUpdatePartial
 from src.models import db_helper
 
+from .service import validate_game
+
 from src.api_v1.auth.authorization import super_admin_access, moderator_access, user_access
 
 
@@ -27,6 +29,7 @@ async def create_game(
         game_add: GameCreate,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
 ):
+    await validate_game(**game_add.__dict__, session=session)
     return await crud.create_game(session=session, game_add=game_add)
 
 

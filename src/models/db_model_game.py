@@ -19,5 +19,5 @@ class Game(Base):
         nullable=False,
     )
 
-    first_pl_score: Mapped[int]
-    second_pl_score: Mapped[int]
+    first_player_score: Mapped[int]
+    second_player_score: Mapped[int]

@@ -10,6 +10,7 @@ class UserRegistration(BaseModel):
     hashed_password: str = Field(..., alias='password')
 
     @field_validator("hashed_password")
+    @classmethod
     def valid_password(cls, password):
         if len(password) <= 10:
             raise ValueError("Password length to short!")

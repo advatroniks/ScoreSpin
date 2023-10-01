@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,7 +25,7 @@ async def get_current_user_by_pid(user_pid: int, session: AsyncSession) -> User 
 
 
 async def _get_user_by_any_parameter(
-        parameter: str,
+        parameter: Literal["pid", "first_name", "email", "username"],
         value: str,
         session: AsyncSession,
 ) -> User:
