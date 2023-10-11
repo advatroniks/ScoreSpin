@@ -1,3 +1,4 @@
+import uuid
 from typing import Literal
 
 from fastapi import Depends
@@ -20,7 +21,7 @@ class Tournament:
         self.members = members
         self.tournament_type = tournament_type
         self.tables = tables
-
+        self.tour_id = uuid.uuid4()
         self.engine = TournamentEngine(self.members, self.tables)
 
     def add_game(self):

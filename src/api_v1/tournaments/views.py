@@ -1,7 +1,8 @@
 import asyncio
 import uuid
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -37,19 +38,23 @@ async def create_tournament(
         session=session
     )
 
-    TOURNAMENT_BUFFER[1] = tournament
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", TOURNAMENT_BUFFER.get(1).members)
+
+    TOURNAMENT_BUFFER[tournament.tour_id] = tournament
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", TOURNAMENT_BUFFER.get(tournament.tour_id).members)
 
 
 @router.post(
     path="/start/"
 )
 async def start_tournament(
-        tournament_id: int
+        tournament_id: uuid.UUID
 ):
-    print(TOURNAMENT_BUFFER)
+    response = JSONResponse(content={'message': 'tournament_starting...'}, status_code=200)
+
     current_tournament = TOURNAMENT_BUFFER.get(tournament_id)
-    await current_tournament.start_tournament()
+    asyncio.create_task(current_tournament.start_tournament())
+
+    return response
 
 
 @router.post(
