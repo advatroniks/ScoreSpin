@@ -36,5 +36,5 @@ class DatabaseHelper:
 
 db_helper = DatabaseHelper(
     url="postgresql+asyncpg://tikhon:123@localhost/sqlalchemy",
-    echo=True
+    echo=False
 )

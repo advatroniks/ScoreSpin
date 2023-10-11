@@ -4,7 +4,8 @@ __all__ = (
     "DatabaseHelper",
     "db_helper",
     "User",
-    "Profile"
+    "Profile",
+    "Tournament"
 )
 
 from .db_config import DatabaseHelper, db_helper
@@ -12,4 +13,5 @@ from .db_model_base import Base
 from .db_model_game import Game
 from .db_model_user import User
 from .db_model_profile import Profile
+from .db_model_tournament import Tournament
 

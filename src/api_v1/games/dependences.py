@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 from fastapi import Path, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +9,7 @@ from . import crud
 
 
 async def get_game_by_id(
-        game_id: Annotated[int, Path],
+        game_id: uuid.UUID,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency)
 ) -> Game:
     game = await crud.get_game_by_id(session=session, game_id=game_id)
