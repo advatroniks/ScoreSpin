@@ -59,4 +59,4 @@ async def complete_game(
         table_number: int
 ):
     current_tournament = TOURNAMENT_BUFFER.get(1)
-    current_tournament.engine.table_operator.remove_game_from_table(1)
+    current_tournament.engine.table_operator.remove_game_from_table(table_number=table_number)

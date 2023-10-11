@@ -28,22 +28,3 @@ class Tournament:
 
     async def start_tournament(self):
         await self.engine.start_tournament()
-
-
-class TournamentManager:
-
-    def __init__(
-            self,
-            members: list[User],
-            tables_counts: int,
-            tournament_type: Literal["standard", "extend"],
-            session: AsyncSession
-    ):
-        self.members = members,
-        self.table_counts = tables_counts,
-        self.tournament_type = tournament_type,
-        self.session = session
-        self.game_list = self.create_all_games()
-
-
-

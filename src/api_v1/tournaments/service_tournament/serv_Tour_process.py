@@ -36,7 +36,7 @@ class TableOperator:
             tables_conditions[i] = None
         return tables_conditions
 
-    def get_free_table(self):
+    def get_free_table(self):                                                                # PASSED
         for table, game in self.table_conditions.items():
             if game is None:
                 return table, game
@@ -55,11 +55,13 @@ class TableOperator:
 
         raise Exception("No free tables")
 
-    def remove_game_from_table(
+    def remove_game_from_table(                                                                 # PASSED
             self,
             table_number: int
     ):
+        self.game_list.remove(self.table_conditions[table_number])
         self.table_conditions[table_number] = None
+        print("Game removed from table number -- ", table_number)
 
 
 class GameCreateManager:
@@ -99,7 +101,6 @@ class TournamentEngine:
     async def start_tournament(self):
         while len(self.game_list) != 0:
             await asyncio.sleep(3)
-            print(len(self.game_list))
             if self.table_operator.get_free_table():
                 self.add_game()
             print(self.table_conditions)
@@ -115,8 +116,6 @@ class TournamentEngine:
             )
             print(current_game)
             self.table_operator.add_game_on_table(game=current_game)
-            self.game_list.remove(current_game)
-            print("game removed!")
 
         except StopIteration:
             print("Not free tables")

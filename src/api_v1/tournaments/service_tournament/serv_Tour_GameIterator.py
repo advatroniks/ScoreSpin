@@ -21,11 +21,11 @@ class IterationGames:
     def __iter__(self):
         return self
 
-    def __next__(self) -> tuple:
+    def __next__(self) -> list:
         for game in self.game_list:
             # print(game, self.result_players_list, "_NEXT_ ITERATROR!!!") uncomment for debug mode
             if not set(game) & set(self.result_players_list):
                 print("ITERATOR RETURN GAME!!!!!", game)
-                return game
+                return list(game)
 
         raise StopIteration("NOT FREE TABLES")

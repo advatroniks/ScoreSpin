@@ -4,6 +4,3 @@ from src.api_v1.tournaments.service_tournament.serv_Tour_process import Tourname
 from src.api_v1.tournaments.service_tournament.serv_Tour_Manager import Tournament
 
 
-@pytest.fixture()
-def create_tournament_instance():
-    return Tournament()
