@@ -8,10 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import db_helper
 
-from .service_tournament.serv_Tour_buffer import TOURNAMENT_BUFFER
+from src.api_v1.tournaments.service_tournament.Tour_Buffer import TOURNAMENT_BUFFER
 from .schemas import CreateTournament
 from .crud import get_tournaments_members
-from .service_tournament.serv_Tour_Manager import Tournament
+from .service_tournament.Tour_Manager import Tournament
+
 
 router = APIRouter(
     tags=["Tournaments"]
@@ -37,10 +38,12 @@ async def create_tournament(
         tables=tables_list,
         session=session
     )
-
-
+    print(id(TOURNAMENT_BUFFER))
     TOURNAMENT_BUFFER[tournament.tour_id] = tournament
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", TOURNAMENT_BUFFER.get(tournament.tour_id).members)
+    print("Tournament created: users:", TOURNAMENT_BUFFER.get(tournament.tour_id).members)
+    print(TOURNAMENT_BUFFER)
+    print(id(TOURNAMENT_BUFFER))
+    return tournament.tour_id
 
 
 @router.post(
@@ -61,7 +64,8 @@ async def start_tournament(
     path="/complete_game"
 )
 async def complete_game(
-        table_number: int
+        table_number: int,
+        tournament_id: uuid.UUID
 ):
-    current_tournament = TOURNAMENT_BUFFER.get(1)
+    current_tournament = TOURNAMENT_BUFFER.get(tournament_id)
     current_tournament.engine.table_operator.remove_game_from_table(table_number=table_number)

@@ -8,7 +8,7 @@ from src.models import User
 from src.api_v1.games.crud import create_game
 from src.api_v1.games.schemas import GameCreate
 
-from .serv_Tour_GameIterator import IterationGames
+from .Tour_GameIterator import IterationGames
 
 
 class TableOperator:
@@ -62,6 +62,7 @@ class TableOperator:
         self.game_list.remove(self.table_conditions[table_number])
         self.table_conditions[table_number] = None
         print("Game removed from table number -- ", table_number)
+
 
 
 class GameCreateManager:

@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import User, db_helper
 
-from .serv_Tour_process import TournamentEngine
+from .Tour_process import TournamentEngine
 
 
 class Tournament:
@@ -21,7 +21,7 @@ class Tournament:
         self.members = members
         self.tournament_type = tournament_type
         self.tables = tables
-        self.tour_id = uuid.uuid4()
+        self.tour_id = 1
         self.engine = TournamentEngine(self.members, self.tables)
 
     def add_game(self):
