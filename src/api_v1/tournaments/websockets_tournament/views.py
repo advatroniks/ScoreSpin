@@ -1,3 +1,4 @@
+import asyncio
 import uuid
 
 
@@ -15,78 +16,81 @@ from src.api_v1.tournaments.service_tournament.Tour_Buffer import TOURNAMENT_BUF
 
 router = APIRouter(tags=["WebSocketTesting"])
 
-html = """
+#'ws://localhost:8000/api/v1/test_websocket/ws/${currentRoom}/${user}'
+
+
+html ="""
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat with Rooms</title>
+    <title>WebSocket Example</title>
 </head>
 <body>
-    <h1>Chat with Rooms</h1>
     <div>
-        <button id="room1">Tournament 1</button>
-        <button id="room2">Tournament 2</button>
-        <button id="room3">Room 3</button>
-        <button id="room4">Room 4</button>
+        <input id="userIdInput" type="text" placeholder="Введите user_id">
+        <button id="setUserIdButton">Установить user_id</button>
     </div>
-    <input type="text" id="message" placeholder="Enter message please..." />
-    <button id="send">Send</button>
-    <div id="chat"></div>
+    <div>
+        <button id="connectButton" disabled>Соединиться</button>
+        <button id="finishMatchButton" disabled>Завершить матч</button>
+        <select id="matchResult" disabled>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+    </div>
+    <div id="serverResponse"></div>
 
     <script>
-        const messageInput = document.getElementById('message');
-        const sendButton = document.getElementById('send');
-        const chat = document.getElementById('chat');
-        let user;
-        
-        function askUserName() {
-            user = prompt("Enter your name:");
-            if (!user) {
-                askUserName();
+        const userIdInput = document.getElementById('userIdInput');
+        const setUserIdButton = document.getElementById('setUserIdButton');
+        const connectButton = document.getElementById('connectButton');
+        const finishMatchButton = document.getElementById('finishMatchButton');
+        const matchResult = document.getElementById('matchResult');
+        const serverResponse = document.getElementById('serverResponse');
+        let ws;
+        let userId; // Переменная для хранения user_id
+        let tournamentId; // Переменная для хранения tournament_id
+
+        setUserIdButton.addEventListener('click', () => {
+            // Установка user_id и активация кнопок
+            userId = userIdInput.value;
+            tournamentId = 1; // Номер турнира по умолчанию
+            if (userId) {
+                userIdInput.setAttribute('disabled', true);
+                setUserIdButton.setAttribute('disabled', true);
+                connectButton.removeAttribute('disabled');
+                finishMatchButton.removeAttribute('disabled');
+                matchResult.removeAttribute('disabled');
             }
-        }
-        
-        askUserName();
+        });
 
-        let socket;
-        let currentRoom = 1; // Default room is 1
-
-        function addMessage(message) {
-            chat.innerHTML += message + '<br>';
-        }
-
-        function switchRoom(roomNumber) {
-            currentRoom = roomNumber;
-            // Close existing WebSocket connection if any
-            if (socket) {
-                socket.close();
+        connectButton.addEventListener('click', () => {
+            if (userId) {
+                // Подключение к WebSocket серверу и передача user_id и tournament_id
+                ws = new WebSocket(`ws://localhost:8000/api/v1/test_websocket/ws/${tournamentId}/${userId}`);
+                ws.onopen = () => {
+                    console.log('WebSocket соединение установлено.');
+                };
+                ws.onmessage = (event) => {
+                    // Отображение JSON-ответа от сервера
+                    const response = JSON.parse(event.data);
+                    serverResponse.textContent = JSON.stringify(response, null, 2);
+                };
             }
-            socket = new WebSocket(`ws://localhost:8000/api/v1/test_websocket/ws/${currentRoom}/${user}`);
-            socket.addEventListener('open', (event) => {
-                console.log(`WebSocket connection opened for Room ${currentRoom}`);
-            });
-            socket.addEventListener('message', (event) => {
-                const data = JSON.parse(event.data);
-                addMessage(`${data.sender}: ${data.message}`);
-            });
-        }
+        });
 
-        // Add event listeners to room buttons
-        for (let i = 1; i <= 4; i++) {
-            document.getElementById(`room${i}`).addEventListener('click', () => {
-                switchRoom(i);
-            });
-        }
-
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value;
-            if (message) {
-                socket.send(JSON.stringify({
-                    room_id: currentRoom,
-                    message: message,
-                    sender: user
-                }));
-                messageInput.value = '';
+        finishMatchButton.addEventListener('click', () => {
+            if (userId) {
+                // Отправка информации о завершении матча
+                const result = matchResult.value;
+                const data = {
+                    user_id: userId,
+                    tournament_id: tournamentId,
+                    result: result
+                };
+                ws.send(JSON.stringify(data));
             }
         });
     </script>
@@ -119,9 +123,11 @@ async def websocket_endpoint(
             user = await get_current_user_by_pid(user_id, session)
             for user_seq in TOURNAMENT_BUFFER[tournament_id].members:
                 if user.id == user_seq.id:
-                    await TOURNAMENT_BUFFER[tournament].start_tournament()
                     await websocket.accept()
+                    asyncio.create_task(TOURNAMENT_BUFFER[tournament].start_tournament())
+
+    print("hey")
 
     while True:
         data = await websocket.receive_json()
-        await websocket.send_json(TOURNAMENT_BUFFER[tournament_id].engine.table_conditions[2])
+        TOURNAMENT_BUFFER[tournament_id].engine.table_operator.remove_game_from_table(int(data['result']))
