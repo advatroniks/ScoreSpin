@@ -11,6 +11,21 @@ from src.api_v1.games.schemas import GameCreate
 from .Tour_GameIterator import IterationGames
 
 
+def create_game_combinations(members: list[User]):
+    """
+    Function for create pairs players in tournament.
+    :param members: User object list.
+    :returns: List[(user.id: UUID, user.id: UUID), ...]
+    """
+    game_list = []
+    for user in combinations(members, 2):
+        game_list.append(
+            [user[0].id, user[1].id]
+        )
+
+    return game_list
+
+
 class TableOperator:
     """
     Class for distribution players for tables
@@ -64,23 +79,6 @@ class TableOperator:
         print("Game removed from table number -- ", table_number)
 
 
-
-class GameCreateManager:
-    def __init__(
-            self,
-            members: list[User]
-    ):
-        self.members = members
-
-    def create_all_games(self):
-        game_list = []
-        for user in combinations(self.members, 2):
-            game_list.append(
-                [user[0].id, user[1].id]
-            )
-        return game_list
-
-
 class TournamentEngine:
     """
     При инициализации распределяются все по столам, получаем объект столов(словарь)
@@ -92,7 +90,7 @@ class TournamentEngine:
             tables: list[int]
     ):
         self.tables = tables
-        self.game_list = GameCreateManager(members=members).create_all_games()
+        self.game_list = create_game_combinations(members=members)
         self.table_operator = TableOperator(
             tables=tables,
             game_list=self.game_list
