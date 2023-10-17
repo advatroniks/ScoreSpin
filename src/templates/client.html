@@ -19,7 +19,22 @@
         </select>
     </div>
 
+    <pre id="currentGame"> Тут будет моя текущая игра</pre>
+
     <pre id="serverResponse">Тут будут матч</pre> <!-- Используем <pre> для отображения JSON-данных -->
+
+    <div>
+        <label for="player1">Игрок 1:</label>
+        <input type="text" id="player1" placeholder="Имя игрока 1">
+        <input type="number" id="score1" placeholder="Очки игрока 1">
+    </div>
+    <div>
+        <label for="player2">Игрок 2:</label>
+        <input type="text" id="player2" placeholder="Имя игрока 2">
+        <input type="number" id="score2" placeholder="Очки игрока 2">
+    </div>
+    <button id="saveButton">Сохранить результат</button>
+    <div id="resultDisplay"></div>
 
     <script>
         // Получаем ссылки на HTML-элементы

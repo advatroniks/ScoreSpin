@@ -7,7 +7,7 @@ from typing import Any, Literal
 
 
 async def get_user_dependency(
-        type_parameter: Literal["pid", "first_name", "email", "username"],
+        type_parameter: Literal["pid", "first_name", "email", "username", "id"],
         value: str,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency)
 ) -> User:

@@ -15,6 +15,8 @@ from src.api_v1.users.crud import get_current_user_by_pid
 from src.api_v1.tournaments.service_tournament.Tour_Manager import Tournament
 from src.api_v1.tournaments.service_tournament.Tour_Buffer import TOURNAMENT_BUFFER
 
+from src.api_v1.tournaments.service_tournament.Tour_connect_manager import ConnectionManager
+
 router = APIRouter(tags=["WebSocketTesting"])
 
     #'ws://localhost:8000/api/v1/test_websocket/ws/${currentRoom}/${user}'
@@ -47,17 +49,17 @@ async def websocket_endpoint(
                     await websocket.accept()
                     asyncio.create_task(TOURNAMENT_BUFFER[tournament].start_tournament())
 
-
-    print("hey")
-
     while True:
         data = await websocket.receive_json()
         TOURNAMENT_BUFFER[tournament_id].engine.table_operator.remove_game_from_table(int(data['result']))
-        await asyncio.sleep(5)
-        test_dict = {}
-        for key, value in TOURNAMENT_BUFFER[tournament_id].engine.table_conditions.items():
-            test_dict[key] = [str(value[0]), str(value[1])]
 
-        print(test_dict, "test" * 10)
-        # js_data = json.dumps(test_dict)
-        await websocket.send_json(test_dict)
+        await asyncio.sleep(5)
+
+        tables_conditions = await TOURNAMENT_BUFFER[tournament_id].table_conditions
+
+        for key in tables_conditions:
+            tables_conditions[key][0] = tables_conditions[key][0].first_name + ' ' + tables_conditions[key][0].surname
+            tables_conditions[key][1] = tables_conditions[key][1].first_name + ' ' + tables_conditions[key][1].surname
+
+
+        await websocket.send_json(tables_conditions)
