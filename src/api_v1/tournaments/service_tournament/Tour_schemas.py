@@ -9,8 +9,11 @@ class CurrentGameData(BaseModel):
     table_number: int
 
 
-class TournamentUpdate(BaseModel):
+class TournamentUpdateAll(BaseModel):
     message_type: Literal["service", "current_game_update", "all_games_update"] = "all_games_update"
-    current_game_data: CurrentGameData | None = None
     all_games_data: dict | None = None
+
+
+class TournamentUpdateActiveGame(TournamentUpdateAll):
+    current_game: CurrentGameData
 

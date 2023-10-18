@@ -9,22 +9,19 @@ from fastapi.templating import Jinja2Templates
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
-
 from src.models import db_helper
 from src.api_v1.users.crud import get_current_user_by_pid
 from src.api_v1.tournaments.service_tournament.Tour_connect_manager import connection_manager
 from src.api_v1.tournaments.service_tournament.Tour_Buffer import ACTIVE_TOURNAMENTS
 from .service import CheckForAccessConnect
-from src.api_v1.tournaments.service_tournament.Tour_schemas import TournamentUpdate
-
+from src.api_v1.tournaments.service_tournament.Tour_schemas import TournamentUpdateAll
 
 router = APIRouter(tags=["WebSocketTesting"])
 
-#'ws://localhost:8000/api/v1/test_websocket/ws/${currentRoom}/${user}
+# 'ws://localhost:8000/api/v1/test_websocket/ws/${currentRoom}/${user}
 
 
 templates = Jinja2Templates(directory="templates")
-
 
 connections_list: list[WebSocket] = []
 
@@ -69,14 +66,5 @@ async def websocket_endpoint(
 
             await connection_manager.update_table_conditions_for_all_users(
                 tournament_id=tournament_id,
-                data=TournamentUpdate(all_games_data=data_serialize).model_dump()
+                table_conditions=tables_conditions
             )
-
-            # await websocket.send_json(tables_conditions)
-
-
-        # for key in tables_conditions:
-        #     tables_conditions[key][0] = tables_conditions[key][0].first_name + ' ' + tables_conditions[key][0].surname
-        #     tables_conditions[key][1] = tables_conditions[key][1].first_name + ' ' + tables_conditions[key][1].surname
-        #
-        # await websocket.send_json(tables_conditions)
