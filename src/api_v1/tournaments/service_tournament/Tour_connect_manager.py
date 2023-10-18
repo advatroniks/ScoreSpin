@@ -31,7 +31,8 @@ class ConnectionManager:
     ):
         if tournament_id in self.alive_connections:
             for client_websocket in self.alive_connections[tournament_id]:
-                client_websocket[1].send_json(data)
+                print(data, "HELO" * 20)
+                await client_websocket[1].send_json(data)
 
     async def update_current_game(
             self,
