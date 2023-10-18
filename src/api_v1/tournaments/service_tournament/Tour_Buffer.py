@@ -3,6 +3,6 @@ import uuid
 from .Tour_Manager import Tournament
 
 
-TOURNAMENT_BUFFER: dict[int, Tournament] = {}
+ACTIVE_TOURNAMENTS: dict[int, Tournament] = {}
 
-print(id(TOURNAMENT_BUFFER))
+print(id(ACTIVE_TOURNAMENTS))

@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import User, db_helper
 from src.api_v1.users.crud import _get_user_by_any_parameter
 
-from .Tour_engine import TournamentEngine
+from .Tour_Engine import TournamentEngine
 
 
 class Tournament:

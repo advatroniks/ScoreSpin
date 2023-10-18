@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import db_helper
 
-from src.api_v1.tournaments.service_tournament.Tour_Buffer import TOURNAMENT_BUFFER
+from src.api_v1.tournaments.service_tournament.Tour_Buffer import ACTIVE_TOURNAMENTS
 from .schemas import CreateTournament
 from .crud import get_tournaments_members
 from .service_tournament.Tour_Manager import Tournament
@@ -38,11 +38,11 @@ async def create_tournament(
         tables=tables_list,
         session=session
     )
-    print(id(TOURNAMENT_BUFFER))
-    TOURNAMENT_BUFFER[tournament.tour_id] = tournament
-    print("Tournament created: users:", TOURNAMENT_BUFFER.get(tournament.tour_id).members)
-    print(TOURNAMENT_BUFFER)
-    print(id(TOURNAMENT_BUFFER))
+    print(id(ACTIVE_TOURNAMENTS))
+    ACTIVE_TOURNAMENTS[tournament.tour_id] = tournament
+    print("Tournament created: users:", ACTIVE_TOURNAMENTS.get(tournament.tour_id).members)
+    print(ACTIVE_TOURNAMENTS)
+    print(id(ACTIVE_TOURNAMENTS))
     return tournament.tour_id
 
 
@@ -54,7 +54,7 @@ async def start_tournament(
 ):
     response = JSONResponse(content={'message': 'tournament_starting...'}, status_code=200)
 
-    current_tournament = TOURNAMENT_BUFFER.get(tournament_id)
+    current_tournament = ACTIVE_TOURNAMENTS.get(tournament_id)
     asyncio.create_task(current_tournament.start_tournament())
 
     return response
@@ -67,5 +67,5 @@ async def complete_game(
         table_number: int,
         tournament_id: uuid.UUID
 ):
-    current_tournament = TOURNAMENT_BUFFER.get(tournament_id)
+    current_tournament = ACTIVE_TOURNAMENTS.get(tournament_id)
     current_tournament.engine.table_operator.remove_game_from_table(table_number=table_number)

@@ -19,6 +19,10 @@
         </select>
     </div>
 
+    <div>
+        <button id="startTourButton">Начать турнир</button>
+    </div>
+
     <pre id="currentGame"> Тут будет моя текущая игра</pre>
 
     <pre id="serverResponse">Тут будут матч</pre> <!-- Используем <pre> для отображения JSON-данных -->
@@ -44,6 +48,7 @@
         const finishMatchButton = document.getElementById('finishMatchButton');
         const matchResult = document.getElementById('matchResult');
         const serverResponse = document.getElementById('serverResponse');
+        const startTournamentButton = document.getElementById('startTourButton');
         let ws;
         let userId; // Переменная для хранения user_id
         let tournamentId; // Переменная для хранения tournament_id
@@ -86,11 +91,23 @@
         finishMatchButton.addEventListener('click', () => {
             if (userId) {
                 // Отправка информации о завершении матча
+                console.log('Starting ending match')
                 const result = matchResult.value;
                 const data = {
                     user_id: userId,
                     tournament_id: tournamentId,
                     result: result
+                };
+                ws.send(JSON.stringify(data));
+            }
+        });
+
+        // Обработчик события страт турнира
+        startTournamentButton.addEventListener('click', () => {
+            if (userId) {
+                // Кнопка старта турнира
+                const data = {
+                    start_tournament: 1
                 };
                 ws.send(JSON.stringify(data));
             }
