@@ -23,7 +23,6 @@ class IterationGames:
 
     def __next__(self) -> list:
         for game in self.game_list:
-            # print(game, self.result_players_list, "_NEXT_ ITERATROR!!!") uncomment for debug mode
             if not set(game) & set(self.result_players_list):
                 print("ITERATOR RETURN GAME!!!!!", game)
                 return list(game)
