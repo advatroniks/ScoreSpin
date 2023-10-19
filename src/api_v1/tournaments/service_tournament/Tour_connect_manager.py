@@ -1,5 +1,3 @@
-import uuid
-
 from typing import Literal
 
 from fastapi import WebSocket
@@ -69,8 +67,13 @@ class ConnectionManager:
                     ).model_dump()
                 )
 
-    def disconnect(self, websocket: WebSocket, tournament_id: uuid.UUID):
-        self.alive_connections[tournament_id].remove(websocket)
+    def disconnect(
+            self,
+            websocket: WebSocket,
+            tournament_id: int,
+            user_id: int
+    ):
+        self.alive_connections[tournament_id].remove((user_id, websocket))
 
 
 connection_manager = ConnectionManager()
