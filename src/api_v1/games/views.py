@@ -16,7 +16,7 @@ router = APIRouter(tags=["Games"])
 @router.post(
     path="/",
     response_model=Game,
-    dependencies=[Depends(super_admin_access)],
+    dependencies=[Depends(user_access)],
     status_code=status.HTTP_201_CREATED
 )
 async def create_game(

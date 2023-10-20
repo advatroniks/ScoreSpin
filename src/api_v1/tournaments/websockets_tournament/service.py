@@ -2,7 +2,7 @@ from src.api_v1.tournaments.service_tournament.Tour_Manager import Tournament
 
 
 class CheckForAccessConnect:
-    def __init__(
+    def  __init__(
             self,
             tournament_id: int,
             user_pid: int,

@@ -15,7 +15,6 @@ class ConnectionManager:
         self.alive_connections: {int: list[int, WebSocket]} = {}
 
     async def connect(self, websocket: WebSocket, tournament_id: int, user_id: int):
-        await websocket.accept()
         if tournament_id in self.alive_connections:
             self.alive_connections[tournament_id].append((user_id, websocket))
         else:
