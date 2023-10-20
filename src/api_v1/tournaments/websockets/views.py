@@ -1,5 +1,3 @@
-import asyncio
-
 from fastapi.templating import Jinja2Templates
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,16 +10,17 @@ from fastapi import (
     Depends,
 )
 
-from src.api_v1.auth.oauth2 import get_current_user
 from src.api_v1.tournaments.engine.tour_connect_manager import connection_manager
 from src.api_v1.tournaments.engine.tour_buffer import ACTIVE_TOURNAMENTS
 from src.models import db_helper
-from .service import CheckForAccessConnect, websocket_auth
+from .service import (
+    CheckForAccessConnect,
+    websocket_auth,
+    WebsocketMessageClientHandler
+)
 
 
 router = APIRouter(tags=["WebSocketTesting"])
-
-# 'ws://localhost:8000/api/v1/test_websocket/ws/${currentRoom}/${user}
 
 
 templates = Jinja2Templates(directory="templates")
@@ -63,23 +62,12 @@ async def websocket_endpoint(
             )
             try:
                 while True:
-                    data = await websocket.receive_json()
-                    print(data)
-                    if "start_tournament" in data:
-                        await asyncio.create_task(ACTIVE_TOURNAMENTS[tournament_id].start_tournament())
-                    if "result" in data:
-                        ACTIVE_TOURNAMENTS[tournament_id].engine.table_operator.remove_game_from_table(int(data['result']))
-                        await asyncio.sleep(5)
-                        tables_conditions = await ACTIVE_TOURNAMENTS[tournament_id].table_conditions
+                    websocket_data_handler = WebsocketMessageClientHandler(
+                        websocket=websocket,
+                        tournament_id=tournament_id
+                    )
+                    await websocket_data_handler.data_handler()
 
-                        data_serialize = {}
-                        for key, value in tables_conditions.items():
-                            data_serialize[key] = [i.first_name for i in value]
-
-                        await connection_manager.update_table_conditions_for_all_users(
-                            tournament_id=tournament_id,
-                            table_conditions=tables_conditions
-                        )
             except WebSocketDisconnect:
                 connection_manager.disconnect(
                     websocket=websocket,
