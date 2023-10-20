@@ -75,7 +75,7 @@
         connectButton.addEventListener('click', () => {
             if (userId) {
                 // Подключение к WebSocket серверу и передача user_id и tournament_id
-                const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyNzc3QGV4YW1wbGUuY29tIiwiZXhwIjoxNjk3NzkyODA1fQ.QotJy-sfrA9meK-uBdiF20idmLGnnIdD2d5fGyX8LJA";
+                const token = ".eyJzdWIiOiJ1c2VyNzc3QGV4YW1wbGUuY29tIiwiZXhwIjoxNjk3ODE1NDAwfQ.9OQhaha_5UO2phlNH4-wa-L-wDoVuYTWvTDgm-XdIew";
                 ws = new WebSocket(`ws://localhost:8000/api/v1/test_websocket/ws/${tournamentId}`);
                 ws.onopen = () => {
                     console.log('WebSocket соединение установлено.');

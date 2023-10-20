@@ -11,13 +11,10 @@ from fastapi import (
 )
 
 from src.api_v1.tournaments.engine.tour_connect_manager import connection_manager
+from .service import CheckForAccessConnect, ClientWebsocketMessageHandler
 from src.api_v1.tournaments.engine.tour_buffer import ACTIVE_TOURNAMENTS
+from src.api_v1.auth.websocket_auth import websocket_auth
 from src.models import db_helper
-from .service import (
-    CheckForAccessConnect,
-    websocket_auth,
-    WebsocketMessageClientHandler
-)
 
 
 router = APIRouter(tags=["WebSocketTesting"])
@@ -42,10 +39,7 @@ async def websocket_endpoint(
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency)
 ):
 
-    user = await websocket_auth(
-        websocket=websocket,
-        session=session,
-    )
+    user = await websocket_auth(websocket=websocket, session=session)
 
     if user:
         check_access = CheckForAccessConnect(
@@ -60,9 +54,10 @@ async def websocket_endpoint(
                 tournament_id=tournament_id,
                 user_id=user.pid
             )
+
             try:
                 while True:
-                    websocket_data_handler = WebsocketMessageClientHandler(
+                    websocket_data_handler = ClientWebsocketMessageHandler(
                         websocket=websocket,
                         tournament_id=tournament_id
                     )

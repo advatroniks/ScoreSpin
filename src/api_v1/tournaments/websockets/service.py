@@ -2,9 +2,6 @@ import asyncio
 
 from fastapi import WebSocket
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.api_v1.auth.oauth2 import get_current_user
 from src.api_v1.tournaments.engine.tour_buffer import ACTIVE_TOURNAMENTS
 from src.api_v1.tournaments.engine.tour_connect_manager import connection_manager
 
@@ -38,27 +35,7 @@ class CheckForAccessConnect:
                 return False
 
 
-async def websocket_auth(
-        websocket: WebSocket,
-        session: AsyncSession,
-
-):
-    await websocket.accept()
-
-    token = await websocket.receive_text()
-
-    user = await get_current_user(
-        token=token,
-        session=session
-    )
-
-    if user:
-        return user
-    else:
-        await websocket.close(code=4000, reason="User Unauthorized! Sosi chlen, eblo")
-
-
-class WebsocketMessageClientHandler:
+class ClientWebsocketMessageHandler:
     def __init__(
             self,
             websocket: WebSocket,

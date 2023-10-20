@@ -4,7 +4,7 @@ from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, WebSocket
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
@@ -59,6 +59,7 @@ def create_access_token(
 async def get_current_user(
         token: Annotated[str, Depends(oauth2_scheme)],
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
+        websocket: WebSocket = None
 ) -> User | None:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -72,6 +73,8 @@ async def get_current_user(
             raise credentials_exception
         token_data = schemas.TokenData(user_email=user_email)
     except JWTError:
+        if websocket:
+            await websocket.close(code=4000, reason="Not Auth")
         raise credentials_exception
     user = await crud.get_current_user_by_email(
         user_email=token_data.user_email,
@@ -81,6 +84,4 @@ async def get_current_user(
         raise credentials_exception
 
     return user
-
-
 
