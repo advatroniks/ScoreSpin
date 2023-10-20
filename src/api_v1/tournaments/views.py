@@ -1,17 +1,17 @@
 import asyncio
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
+
 from fastapi.responses import JSONResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import db_helper
 
-from src.api_v1.tournaments.service_tournament.Tour_Buffer import ACTIVE_TOURNAMENTS
-from .schemas import CreateTournament
+from src.api_v1.tournaments.engine.tour_buffer import ACTIVE_TOURNAMENTS
 from .crud import get_tournaments_members
-from .service_tournament.Tour_Manager import Tournament
+from .engine.tour_manager import Tournament
 
 
 router = APIRouter(
@@ -69,3 +69,5 @@ async def complete_game(
 ):
     current_tournament = ACTIVE_TOURNAMENTS.get(tournament_id)
     current_tournament.engine.table_operator.remove_game_from_table(table_number=table_number)
+
+

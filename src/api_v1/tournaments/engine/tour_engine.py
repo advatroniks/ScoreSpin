@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import User
 from src.api_v1.games.crud import create_game
 from src.api_v1.games.schemas import GameCreate
-from src.api_v1.tournaments.service_tournament.Tour_connect_manager import connection_manager
+from src.api_v1.tournaments.engine.tour_connect_manager import connection_manager
 
-from .Tour_GameIterator import IterationGames
+from .tour_game_iter import IterationGames
 
 
 def create_game_combinations(members: list[User]):

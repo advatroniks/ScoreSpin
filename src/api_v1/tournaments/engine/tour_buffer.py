@@ -1,6 +1,6 @@
 import uuid
 
-from .Tour_Manager import Tournament
+from .tour_manager import Tournament
 
 
 ACTIVE_TOURNAMENTS: dict[int, Tournament] = {}

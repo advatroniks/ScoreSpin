@@ -5,7 +5,7 @@ from .users.views import router as users_router
 from .auth.views import router as auth_router
 from .tournaments.views import router as tournament_router
 
-from .tournaments.websockets_tournament.views import router as test_socket_router
+from .tournaments.websockets.views import router as test_socket_router
 
 router = APIRouter()
 

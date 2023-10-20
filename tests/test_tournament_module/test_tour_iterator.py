@@ -2,7 +2,7 @@ import pytest
 
 from itertools import combinations
 
-from src.api_v1.tournaments.service_tournament.Tour_GameIterator import IterationGames
+from src.api_v1.tournaments.engine.tour_game_iter import IterationGames
 
 
 players = [

@@ -3,7 +3,7 @@ from typing import Literal
 from fastapi import WebSocket
 
 from src.models import User
-from .Tour_schemas import (
+from .tour_schemas import (
     TournamentUpdateAll,
     TournamentUpdateActiveGame,
     CurrentGameData,
