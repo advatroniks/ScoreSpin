@@ -24,7 +24,7 @@ async def get_current_user_by_pid(user_pid: int, session: AsyncSession) -> User 
     return await session.get(User, user_pid)
 
 
-async def _get_user_by_any_parameter(
+async def get_user_by_any_parameter(
         parameter: Literal["pid", "first_name", "email", "username", "id"],
         value: str,
         session: AsyncSession,

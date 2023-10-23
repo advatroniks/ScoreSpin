@@ -31,6 +31,8 @@ class GameUpdate(GameBase):
     winner_id: uuid.UUID | None = None
 
 
+
+
 class Game(GameBase):
 
     # Парсинг входящей модели sqlalchemy >> model pydantic.( нужно брать свойства с атрибутов)

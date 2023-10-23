@@ -11,7 +11,7 @@ async def get_user_dependency(
         value: str,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency)
 ) -> User:
-    user = await crud._get_user_by_any_parameter(
+    user = await crud.get_user_by_any_parameter(
         parameter=type_parameter,
         value=value,
         session=session

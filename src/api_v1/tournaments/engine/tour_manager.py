@@ -1,4 +1,3 @@
-import uuid
 from typing import Literal
 
 from fastapi import Depends
@@ -6,7 +5,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import User, db_helper
-from src.api_v1.users.crud import _get_user_by_any_parameter
+from src.api_v1.users.crud import get_user_by_any_parameter
 
 from .tour_engine import TournamentEngine
 
@@ -39,7 +38,7 @@ class Tournament:
         for table, pair in self.engine.table_conditions.items():
             _table_conditions[table] = []
             for user in pair:
-                user = await _get_user_by_any_parameter(
+                user = await get_user_by_any_parameter(
                     parameter="id",
                     value=user,
                     session=self.session
