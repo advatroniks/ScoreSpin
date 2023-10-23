@@ -120,15 +120,15 @@ class TournamentEngine:
         except StopIteration:
             print("Not free tables")
 
-    async def complete_game(
-            self,
-            table_number: int,
-            # game: GameCreate | None,                                              #MOCK BY TESTING
-            # session: AsyncSession | None
-    ):
-        # await create_game(
-        #     session=session,
-        #     game_add=game
-        # )
-
-        self.table_conditions[table_number] = None
+    # async def complete_game(
+    #         self,
+    #         table_number: int,
+    #         game: GameCreate | None,                                              #MOCK BY TESTING
+    #         session: AsyncSession | None
+    # ):
+    #     await create_game(
+    #         session=session,
+    #         game_add=game
+    #     )
+    #
+    #     self.table_conditions[table_number] = None

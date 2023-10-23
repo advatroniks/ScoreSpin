@@ -5,19 +5,14 @@ from typing import Annotated
 
 
 class Game(Base):
-    first_player_id: Mapped[str] = mapped_column(
-        Uuid, ForeignKey("users.id"),
-        nullable=False,
-    )
-    second_player_id: Mapped[str] = mapped_column(
-        Uuid, ForeignKey("users.id"),
-        nullable=False,
-    )
-
     winner_id: Mapped[str] = mapped_column(
         Uuid, ForeignKey("users.id"),
         nullable=False,
     )
+    loser_id: Mapped[str] = mapped_column(
+        Uuid, ForeignKey("users.id"),
+        nullable=False,
+    )
 
-    first_player_score: Mapped[int]
+    winner_score: Mapped[int]
     second_player_score: Mapped[int]
