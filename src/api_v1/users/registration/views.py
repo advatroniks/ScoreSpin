@@ -16,8 +16,11 @@ async def registration_user(
         new_user: UserRegistration,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
 ):
-    return await crud.create_new_user(
+    user = await crud.create_new_user(
         new_user=new_user,
         session=session,
     )
+    await crud.create_new_profile(user.id, session)
+
+    return user
 

@@ -1,11 +1,11 @@
 from typing import Annotated, Literal
-
+import uuid
 from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pydantic import EmailStr
 
-from src.models import User
+from src.models import User, Profile
 from .schemas import PutUpdateUserSchema, PatchUpdateUserSchema
 from src.api_v1.users.registration.schemas import UserRegistration
 
@@ -18,6 +18,12 @@ async def create_new_user(new_user: UserRegistration, session: AsyncSession) -> 
     session.add(user)
     await session.commit()
     return user
+
+async def create_new_profile(user_id: uuid.UUID, session: AsyncSession):
+    profile = Profile(user_id=user_id)
+    session.add(profile)
+    await session.commit()
+    return profile
 
 
 async def get_current_user_by_pid(user_pid: int, session: AsyncSession) -> User | None:

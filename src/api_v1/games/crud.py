@@ -29,7 +29,12 @@ async def get_game_by_id(session: AsyncSession, game_id: uuid.UUID) -> Game | No
 
 
 async def create_game(session: AsyncSession, game_add: GameCreate) -> Game:
-    game = Game(**game_add.model_dump())
+    game = Game(
+        winner_id=game_add.winner_id,
+        loser_id=game_add.loser_id,
+        winner_score=game_add.winner_score,
+        loser_score=game_add.loser_score,
+    )
     print(game.id)
     session.add(game)
     await session.commit()

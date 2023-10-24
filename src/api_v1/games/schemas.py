@@ -22,7 +22,7 @@ class GameCreate(BaseModel):
     @computed_field
     @property
     def winner_id(self) -> uuid.UUID:
-        if self.second_player_score_score > self.first_player_score:
+        if self.second_player_score > self.first_player_score:
             return self.second_player_id
         return self.first_player_id
 
@@ -36,16 +36,17 @@ class GameCreate(BaseModel):
     @computed_field
     @property
     def winner_score(self) -> int:
-        if self.second_player_score_score > self.first_player_score:
+        if self.second_player_score > self.first_player_score:
             return self.second_player_score
         return self.first_player_score
 
     @computed_field
     @property
     def loser_score(self) -> int:
-        if self.second_player_score_score < self.first_player_score:
+        if self.second_player_score < self.first_player_score:
             return self.second_player_score
         return self.first_player_score
+
 
 class GameUpdate(GameBase):
     winner_id: uuid.UUID | None = None

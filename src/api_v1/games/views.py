@@ -4,7 +4,7 @@ from .dependences import get_game_by_id
 from . import crud
 from .schemas import Game, GameCreate, GameUpdate
 from src.models import db_helper
-
+from src.api_v1.statistics.service import  calculateRating
 from .service import validate_game
 
 from src.api_v1.auth.authorization import super_admin_access, moderator_access, user_access
@@ -16,18 +16,23 @@ router = APIRouter(tags=["Games"])
 @router.post(
     path="/",
     response_model=Game,
-    dependencies=[Depends(user_access)],
+    #dependencies=[Depends(user_access)],
     status_code=status.HTTP_201_CREATED
 )
 async def create_game(
         game_add: GameCreate,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
 ):
+
+    print(await calculateRating(game_add, session))
     await validate_game(
-        **game_add.__dict__,
         session=session,
         winner_id=game_add.winner_id,
+        winner_score=game_add.winner_score,
+        loser_id=game_add.loser_id,
+        loser_score=game_add.loser_score
     )
+
     return await crud.create_game(session=session, game_add=game_add)
 
 

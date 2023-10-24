@@ -15,4 +15,4 @@ class Game(Base):
     )
 
     winner_score: Mapped[int]
-    second_player_score: Mapped[int]
+    loser_score: Mapped[int]

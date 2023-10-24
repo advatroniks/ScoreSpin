@@ -5,6 +5,7 @@ from src.models import db_helper
 
 router = APIRouter(tags=["Statistics"])
 
+
 @router.get(
     path="/",
     response_model=list[int]

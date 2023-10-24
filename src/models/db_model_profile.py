@@ -15,9 +15,9 @@ class Profile(Base):
     base: Mapped[str | None]
     left_side: Mapped[str | None]
     right_side: Mapped[str| None]
-    game_style: Mapped[bool]
-    date_of_birth: Mapped[date]
-    city: Mapped[str]
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    game_style: Mapped[bool| None]
+    date_of_birth: Mapped[date| None]
+    city: Mapped[str| None]
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), unique=True)
     rating: Mapped[int] = mapped_column(default=100, server_default=text("100"))
     user: Mapped["User"] = relationship(back_populates="profile")
