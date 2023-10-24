@@ -35,6 +35,6 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(
-    url="postgresql+asyncpg://tikhon:123@localhost/sqlalchemy",
+    url="postgresql+asyncpg://harold:123@localhost/tennis_stat",
     echo=False
 )
