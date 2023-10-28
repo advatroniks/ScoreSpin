@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_USER
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT
 from src.models import Base
 
 
@@ -17,6 +17,7 @@ config.set_section_option(section, "DB_HOST", DB_HOST)
 config.set_section_option(section, "DB_NAME", DB_NAME)
 config.set_section_option(section, "DB_PASS", DB_PASS)
 config.set_section_option(section, "DB_USER", DB_USER)
+config.set_section_option(section, "DB_PORT", DB_PORT)
 
 
 # Interpret the config file for Python logging.

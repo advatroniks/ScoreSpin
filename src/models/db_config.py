@@ -1,9 +1,11 @@
 from asyncio import current_task
 
-from src.config import DB_USER, DB_PASS, DB_HOST, DB_NAME
+from src.config import DB_USER, DB_PASS, DB_HOST, DB_NAME, DB_PORT
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, async_scoped_session, AsyncSession
 
-DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
+DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+print(DATABASE_URL)
 
 
 class DatabaseHelper:
@@ -35,6 +37,6 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(
-    url="postgresql+asyncpg://harold:123@localhost/tennis_stat",
+    url=DATABASE_URL,
     echo=False
 )

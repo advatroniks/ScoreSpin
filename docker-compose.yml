@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  fastapi_app:
+    build:
+      context: .
+    container_name: fastapi_compose
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "9543:80"
+    depends_on:
+      - db
+    volumes:
+      - fastapi-data-alembic:/home/app/score_spin/alembic
+    networks:
+      - postgres
+
+  db:
+    image: postgres:alpine3.18
+    container_name: database
+    restart: unless-stopped
+    ports:
+      - "5678:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+    name: postgres
+
+volumes:
+  postgres-data:
+  fastapi-data-alembic:
+
