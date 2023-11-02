@@ -26,8 +26,9 @@ async def create_game(
     await validate_game(
         **game_add.__dict__,
         session=session,
-        winner_id=game_add.winner_id,
+        winner_player_id=game_add.winner_player_id,
     )
+    print('hello world' * 20)
     return await crud.create_game(session=session, game_add=game_add)
 
 

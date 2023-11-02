@@ -16,7 +16,7 @@ async def validate_game(
         second_player_score: int,
         first_player_id: uuid.UUID,
         second_player_id: uuid.UUID,
-        winner_id: uuid.UUID | Any,
+        winner_player_id: uuid.UUID | Any,
         session: AsyncSession,
         **kwargs
 ):
@@ -33,10 +33,10 @@ async def validate_game(
             detail="First player score equal second player score! "
         )
 
-    if winner_id not in [first_player_id, second_player_id]:
+    if winner_player_id not in [first_player_id, second_player_id]:
         raise ValueError("Winner_id defined incorrect! Being")
 
-    if first_player_score > second_player_score and first_player_id != winner_id:
+    if first_player_score > second_player_score and first_player_id != winner_player_id:
         raise ValueError("Winner_id defined incorrect!")
 
     available_score = [score for score in range(4)]
@@ -52,7 +52,6 @@ async def validate_game(
             User.id == second_player_id
         )
     )
-
     players_result_for_check = await session.execute(stmt)
     result = players_result_for_check.scalars().all()
     if len(result) != 2:

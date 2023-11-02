@@ -5,7 +5,7 @@ from sqlalchemy.engine import Result
 from sqlalchemy import select
 
 from src.models import Game
-from .schemas import GameCreate, GameUpdate
+from .schemas import GameCreate, GameUpdate, GameBase
 from .service import validate_game
 
 
@@ -31,7 +31,9 @@ async def get_game_by_id(session: AsyncSession, game_id: uuid.UUID) -> Game | No
 async def create_game(session: AsyncSession, game_add: GameCreate) -> Game:
     game = Game(**game_add.model_dump())
     print(game.id)
+    print(game.id, "game_id")
     session.add(game)
+    print(game.id, "after")
     await session.commit()
     return game
 
