@@ -1,41 +1,66 @@
 version: "3.9"
 
 services:
+  database:
+    image: postgres:alpine3.18
+    container_name: postgres_database
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "9999:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/sql_extension.sql:/docker-entrypoint-initdb.d/extension.sql
+    networks:
+      - scorespin_net
+
   fastapi_app:
     build:
       context: .
-    container_name: fastapi_compose
+      dockerfile: Dockerfile
+    container_name: fastapi_app
+    ports:
+      - "8080:80"
     restart: unless-stopped
     env_file:
       - .env
-    ports:
-      - "9543:80"
+    networks:
+      - scorespin_net
     depends_on:
-      - db
-    volumes:
-      - fastapi-data-alembic:/home/app/score_spin/alembic
-    networks:
-      - postgres
+      - migrations
 
-  db:
-    image: postgres:alpine3.18
-    container_name: database
-    restart: unless-stopped
-    ports:
-      - "5678:5432"
-    env_file:
-      - .env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - postgres
 
-networks:
-  postgres:
-    driver: bridge
-    name: postgres
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - /bin/bash
+      - -c
+      - |
+        cd ..
+        alembic upgrade head
+    networks:
+      - scorespin_net
+    depends_on:
+      database:
+        condition: service_healthy
 
 volumes:
-  postgres-data:
-  fastapi-data-alembic:
+  postgres_data:
+
+networks:
+  scorespin_net:
+    driver: bridge
+    name: scorespin_net
+
+
+
 

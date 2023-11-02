@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10-slim
 
 LABEL maintainer="tihon414@gmail.com"
 
@@ -11,6 +11,7 @@ COPY requirements.txt /home/app/score_spin
 RUN pip install -r requirements.txt
 
 COPY . .
+
 
 WORKDIR /home/app/score_spin/src
 
