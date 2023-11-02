@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from .dependences import get_game_by_id
@@ -14,13 +16,14 @@ router = APIRouter(tags=["Games"])
 
 
 @router.post(
-    path="/",
+    path="/create_game",
     response_model=Game,
     dependencies=[Depends(user_access)],
     status_code=status.HTTP_201_CREATED
 )
 async def create_game(
         game_add: GameCreate,
+        tournament_id: uuid.UUID = None,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
 ):
     await validate_game(
@@ -28,8 +31,10 @@ async def create_game(
         session=session,
         winner_player_id=game_add.winner_player_id,
     )
-    print('hello world' * 20)
-    return await crud.create_game(session=session, game_add=game_add)
+    game = await crud.create_game(session=session, game_add=game_add)
+
+
+
 
 
 @router.get(

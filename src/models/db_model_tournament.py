@@ -10,4 +10,3 @@ from src.models import Base
 class Tournament(Base):
     tournament_type: Mapped[Literal["standard", "extend"]]
     tournament_date: Mapped[date]
-    tournament_process: Mapped[dict] = mapped_column(JSON)

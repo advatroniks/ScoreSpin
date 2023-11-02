@@ -12,9 +12,10 @@ if TYPE_CHECKING:
 
 
 class Profile(Base):
+    rating: Mapped[int]
     base: Mapped[str | None]
     left_side: Mapped[str | None]
-    right_side: Mapped[str| None]
+    right_side: Mapped[str | None]
     game_style: Mapped[bool]
     date_of_birth: Mapped[date]
     city: Mapped[str]
