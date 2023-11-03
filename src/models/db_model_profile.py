@@ -9,6 +9,7 @@ from src.models import Base
 
 if TYPE_CHECKING:
     from .db_model_user import User
+    from .db_model_tournament import Tournament
 
 
 class Profile(Base):
@@ -21,3 +22,7 @@ class Profile(Base):
     city: Mapped[str]
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     user: Mapped["User"] = relationship(back_populates="profile")
+    tournaments: Mapped[list["Tournament"]] = relationship(
+        secondary="players_tournaments_m2m",
+        back_populates="players_profiles"
+    )

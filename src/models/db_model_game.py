@@ -21,11 +21,13 @@ class Game(Base):
     winner_score: Mapped[int]
     looser_score: Mapped[int]
 
+    tournament_pid: Mapped[int] = mapped_column(
+        ForeignKey("tournaments.pid"),
+        nullable=True
+    )
+
     game_time: Mapped[datetime] = mapped_column(
         default=datetime.now,
         server_default=text("now()"),
         nullable=False
     )
-
-
-
