@@ -5,5 +5,4 @@ env.txt
 venv/,
 .idea
 venv
-alembic/versions
 _data
