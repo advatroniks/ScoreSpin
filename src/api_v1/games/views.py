@@ -23,13 +23,14 @@ router = APIRouter(tags=["Games"])
 )
 async def create_game(
         game_add: GameCreate,
-        tournament_id: uuid.UUID = None,
+        tournament_id: uuid.UUID | None = None,
         session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
 ):
     await validate_game(
         **game_add.__dict__,
         session=session,
         winner_player_id=game_add.winner_player_id,
+
     )
     game = await crud.create_game(session=session, game_add=game_add)
 

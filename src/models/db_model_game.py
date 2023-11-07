@@ -8,14 +8,14 @@ from .db_model_profile import Profile
 
 
 class Game(Base):
-    winner_player_id: Mapped[str] = mapped_column(
+    winner_profile_pid: Mapped[str] = mapped_column(
         AlchemyUUID,
-        ForeignKey("users.id"),
+        ForeignKey("profile.pid"),
         nullable=False
     )
-    looser_player_id: Mapped[str] = mapped_column(
+    looser_profile_pid: Mapped[str] = mapped_column(
         AlchemyUUID,
-        ForeignKey("users.id"),
+        ForeignKey("profile.pid"),
         nullable=False
     )
     winner_score: Mapped[int]

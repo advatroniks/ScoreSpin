@@ -1,10 +1,13 @@
 import uuid
 
+from fastapi import HTTPException, status
+
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from sqlalchemy.engine import Result
 from sqlalchemy import select
 
-from src.models import Game
+from src.models import Game, Tournament, Profile
 from .schemas import GameCreate, GameUpdate, GameBase
 from .service import validate_game
 
@@ -28,7 +31,11 @@ async def get_game_by_id(session: AsyncSession, game_id: uuid.UUID) -> Game | No
     return game
 
 
-async def create_game(session: AsyncSession, game_add: GameCreate) -> Game:
+async def create_game(
+        session: AsyncSession,
+        game_add: GameCreate,
+        tournament_pid: int | None
+) -> Game:
     game = Game(**game_add.model_dump())
     print(game.id)
     print(game.id, "game_id")
@@ -62,3 +69,37 @@ async def delete_game(
 ) -> None:
     await session.delete(game)
     await session.commit()
+
+
+async def check_player_in_tournament(
+        session: AsyncSession,
+        tournament_pid: int,
+        profiles: list[Profile]
+) -> Profile:
+    stmt = (select(
+        Tournament
+    ).options(
+        selectinload(Tournament.players_profiles)
+    ).where(
+        Tournament.pid == tournament_pid
+    )
+    )
+
+    result_seq: Result = await session.execute(statement=stmt)
+
+    tournament: Tournament | None = result_seq.one_or_none()
+    if not tournament:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tournament not found! "
+        )
+
+    validate_profiles: list[Profile] = []
+    for profile_in_tournament in tournament.players_profiles:  # type:Profile
+        if profile_in_tournament.id in [profile.id for profile in profiles]:
+            validate_profiles.append(profile_in_tournament)
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Player in tournament not found!!! Fuck..."
+    )

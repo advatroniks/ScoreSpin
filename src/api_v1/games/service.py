@@ -11,6 +11,7 @@ from fastapi import HTTPException, status
 from src.models import User
 
 
+
 async def validate_game(
         first_player_score: int,
         second_player_score: int,
@@ -18,9 +19,9 @@ async def validate_game(
         second_player_id: uuid.UUID,
         winner_player_id: uuid.UUID | Any,
         session: AsyncSession,
+        tournament_pid: int | None,
         **kwargs
 ):
-
     if first_player_id == second_player_id:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -59,6 +60,8 @@ async def validate_game(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Not found user! Enter correct data!"
         )
+
+
 
 
 

@@ -4,7 +4,7 @@ from itertools import combinations
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.models import User
+from src.models import Profile
 from src.api_v1.games.crud import create_game
 from src.api_v1.games.schemas import GameCreate
 from src.api_v1.tournaments.engine.tour_connect_manager import connection_manager
@@ -12,7 +12,7 @@ from src.api_v1.tournaments.engine.tour_connect_manager import connection_manage
 from .tour_game_iter import IterationGames
 
 
-def create_game_combinations(members: list[User]):
+def create_game_combinations(members: list[Profile]):
     """
     Function for create pairs players in tournament.
     :param members: User object list.
@@ -87,7 +87,7 @@ class TournamentEngine:
 
     def __init__(
             self,
-            members: list[User],
+            members: list[Profile],
             tables: list[int]
     ):
         self.tables = tables

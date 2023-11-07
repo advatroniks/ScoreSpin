@@ -3,10 +3,10 @@ from datetime import date
 
 
 class UserRegistration(BaseModel):
-    first_name: str
-    surname: str
+    first_name: str = Field(min_length=2, max_length=25)
+    surname: str = Field(min_length=2, max_length=25)
     email: EmailStr
-    username: str
+    username: str = Field(min_length=5, max_length=30)
     hashed_password: str = Field(..., alias='password')
 
     @field_validator("hashed_password")
