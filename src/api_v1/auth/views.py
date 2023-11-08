@@ -9,20 +9,24 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import db_helper
 
 from .oauth2 import authenticate_user, create_access_token, get_current_user
-from .schemas import Token, User
+from .schemas import Token, User, AuthUserData
 
 
 router = APIRouter(tags=["Auth"])
 
 
-@router.post("/token", response_model=Token, status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    path="/token",
+    response_model=Token,
+    status_code=status.HTTP_202_ACCEPTED
+)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    auth_data: AuthUserData,
     session: AsyncSession = Depends(db_helper.get_scoped_session_dependency),
 ):
     user = await authenticate_user(
-        user_email=form_data.username,
-        password=form_data.password,
+        user_email=auth_data.username,
+        password=auth_data.password,
         session=session
     )
 
